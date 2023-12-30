@@ -55,5 +55,23 @@ public:
     int Bit_Length() const;
     LongInt LongShiftBits_ToHigh(int bits) const;
     LongInt pow(const LongInt& exponent) const;
+
+    //New functions
+
+    LongInt shiftRight() const;
+    bool isEven() const;
+    static LongInt gcd_bin(const LongInt& a, const LongInt& b);
+    LongInt gcd_euclidian(const LongInt& other) const;
+    static LongInt lcm(const LongInt& a, const LongInt& b);
+
+    static LongInt funcMu(const LongInt& n);
+    static LongInt BarrettReduction(const LongInt& x, const LongInt& n, const LongInt& modulus);
+    int Digit_Length() const;
+
+    static LongInt Add_Mod(const LongInt& a, const LongInt& b, const LongInt& modulus);
+    static LongInt Sub_Mod(const LongInt& a, const LongInt& b, const LongInt& modulus);
+    static LongInt Mult_Mod(const LongInt& a, const LongInt& b, const LongInt& modulus);
+    static LongInt Square_Mod(const LongInt& a, const LongInt& modulus);
+    static LongInt ModPower_Barrett(const LongInt& a, const LongInt& b, const LongInt& modulus);
 };
 #endif

@@ -51,6 +51,11 @@ LongInt LongInt::operator + (const LongInt& other) const {
 
 // Оператор віднімання для LongInt
 LongInt LongInt::operator - (const LongInt& other) const {
+    if (*this < other)
+    {
+        return LongInt();
+    }
+
     uint32_t borrow = 0;
     LongInt result;
     for (int i = 0; i < S; i++) {
@@ -64,6 +69,13 @@ LongInt LongInt::operator - (const LongInt& other) const {
             borrow = 1;
         }
     }
+    for (int i = 0; i < S; i++)
+    {
+        if (result.number[i] < 0) {
+            result.number[i] = 0;
+        }
+    }
+
     return result;
 }
 
@@ -328,5 +340,199 @@ LongInt LongInt::LongShiftBits_ToHigh(int bits) const {
         }
     }
 
+    return result;
+}
+
+//LAB2_tasks!!!!!!!!!!
+
+LongInt LongInt::shiftRight() const {
+    int carry = 0;
+    LongInt result("0");
+
+    for (int i = S - 1; i >= 0; --i) {
+        result.number[i] = (this->number[i] >> 1) + (carry << 31);
+        carry = this->number[i] & 1;
+    }
+
+    return result;
+}
+
+bool LongInt::isEven() const {
+    return (number[0] % 2 == 0);
+}
+
+//Бінарний метод для НСД
+LongInt LongInt::gcd_bin(const LongInt& a, const LongInt& b) {
+    if (b == LongInt("0")) {
+        return a;
+    }
+
+    LongInt tA = a;
+    LongInt tB = b;
+    LongInt d("1");
+
+    while (tA.isEven()) {
+        if (tB.isEven()) {
+            tA = tA.shiftRight();
+            tB = tB.shiftRight();
+            d = d * LongInt("2");
+        }
+        else {
+            break;
+        }
+    }
+
+    while (tA.isEven()) {
+        tA = tA.shiftRight();
+    }
+
+
+    while (tB != LongInt("0")) {
+        while (tB.isEven()) {
+            tB = tB.shiftRight();
+        }
+
+        LongInt temp;
+        if (tA < tB) {
+            temp = tA;
+        }
+        else {
+            temp = tB;
+        }
+
+        if (tA < tB) {
+            tB = tB - tA;
+        }
+        else {
+            tB = tA - tB;
+        }
+        tA = temp;
+    }
+
+    d = d * tA;
+    return d;
+}
+
+
+LongInt LongInt::gcd_euclidian(const LongInt& other) const {
+    LongInt a = *this;
+    LongInt b = other;
+
+    while (b != LongInt("0")) {
+        LongInt t = b;
+        b = a % b;
+        a = t;
+    }
+
+    return a;
+}
+
+//Метод для НСК
+LongInt LongInt::lcm(const LongInt& a, const LongInt& b) {
+    LongInt absProduct = a * b;
+    if (absProduct < LongInt("0")) {
+        absProduct = absProduct;
+    }
+
+    LongInt gcdResult = gcd_bin(a, b);
+    LongInt lcmResult = absProduct / gcdResult;
+
+    return lcmResult;
+}
+
+
+LongInt LongInt::funcMu(const LongInt& n) {
+    int l = n.Digit_Length();
+    LongInt B = LongInt("1") << (2 * l);
+    return B / n;
+}
+
+int LongInt::Digit_Length() const {
+    for (int l = S; l > 0; --l) {
+        if (number[l - 1] != 0) {
+            return l;
+        }
+    }
+    return 0;
+}
+
+LongInt LongInt::BarrettReduction(const LongInt& x, const LongInt& n, const LongInt& modulus) {
+    int k = n.Digit_Length();
+    LongInt tX = x;
+    LongInt tN = n;
+    LongInt tM = modulus;
+
+    if (tX < tN) {
+        return tX;
+    }
+
+    LongInt Q = tX >> (k - 1);
+    Q = Q * tM;
+    Q = Q >> (k + 1);
+
+    LongInt R = tX - (Q * tN);
+    while (R >= tN) {
+        R = R - tN;
+    }
+    return R;
+}
+
+
+LongInt LongInt::Add_Mod(const LongInt& a, const LongInt& b, const LongInt& modulus) {
+
+    LongInt result("0");
+    result = a + b;
+
+    if (result >= modulus) {
+        result = BarrettReduction(result, modulus, funcMu(modulus));
+    }
+
+    return result;
+}
+
+LongInt LongInt::Sub_Mod(const LongInt& a, const LongInt& b, const LongInt& modulus) {
+    LongInt result("0");
+
+    if (a >= b) {
+        result = BarrettReduction(a - b, modulus, funcMu(modulus));
+    }
+    else {
+        result = BarrettReduction(b - a, modulus, funcMu(modulus));
+        result = modulus - result;
+    }
+
+
+    return result;
+}
+
+LongInt LongInt::Mult_Mod(const LongInt& a, const LongInt& b, const LongInt& modulus) {
+    LongInt result("0");
+
+    result = a * b;
+
+    if (result >= modulus) {
+        result = BarrettReduction(result, modulus, funcMu(modulus));
+    }
+
+    return result;
+}
+
+LongInt LongInt::Square_Mod(const LongInt& a, const LongInt& modulus) {
+    return LongInt::Mult_Mod(a, a, modulus);
+}
+
+LongInt LongInt::ModPower_Barrett(const LongInt& a, const LongInt& b, const LongInt& modulus) {
+    LongInt result("1");
+    LongInt base = a % modulus;
+    LongInt Mu = funcMu(modulus);
+
+    std::string binaryExp = b.convert_IntoBinary(b);
+
+    for (int i = binaryExp.length() - 1; i >= 0; --i) {
+        if (binaryExp[i] == '1') {
+            result = BarrettReduction(result * base, modulus, Mu);
+        }
+        base = BarrettReduction(base.square(), modulus, Mu);
+    }
     return result;
 }

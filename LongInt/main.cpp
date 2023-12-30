@@ -10,198 +10,213 @@ int main() {
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    //LongInt a = LongInt::GenerateRandomLongInt(10);
-    //LongInt b = LongInt::GenerateRandomLongInt(5);
-
 
     LongInt a("658ec5e5d8f126d692936c196bc1be68fdbc7483d7f1035c8e636c36ed5d4d0f0f69a0fa8158f4d0967e3ebd23aa4081f14540fb4f4724140e38ab2a40d33e807028b2f40b1e5362c392348d7cd81dde9ec6a79e1f4abb8b706ea0d63d30f0663a2ca1ff673d8889bc315853fca663a2c05f46c87657f0fea4ec2aafe8bbf3ac");
     LongInt b("f5aa1bd307eedf96db133a218aa605a0edb6de4fa9d43d100cd75990b3c9b72347ff83796c2f886b4a58f312b8bdbdbcaf500790eee9add7165837032d2bd268e9a73cb50dca7a065abb515a18f8783c9f1bdaa5400a2b2f06cc42a2b38f41599d5bab219aaff407f6c283d479de944f8d039233709e21e30aa380b98026ac33");
-    LongInt n("7");
+    LongInt m("5bffd2ad88c901a224caba35ba09c26ae6be9c06dae976a0fc91b7e6f5076559813cb94d2b33e86c9bf1afabc4598e769fd3e7c27bc45bbeab5e78ce48fabe89ef514ff65c64da6e6858a91600de5b4091b219b88ff502fd166ea1ef805e37bc0695d17348823898c0a7bfe217d7980ca93b724b2aecec6c4f0165e9b30002e2");
 
     std::cout << "A = " << LongInt::convert_NumberToHexString(a.getNumber()) << std::endl;
     std::cout << "B = " << LongInt::convert_NumberToHexString(b.getNumber()) << std::endl;
-    std::cout << "n = " << LongInt::convert_NumberToHexString(n.getNumber()) << std::endl;
+    std::cout << "m = " << LongInt::convert_NumberToHexString(m.getNumber()) << std::endl;
 
 
-    // Виконання арифметичних операцій
-    LongInt q = a + b;
-    LongInt w = a - b;
-    LongInt e = a * 0x10;
-    LongInt r = a * b;
-    LongInt t = a.square();
-    LongInt y = a / b;
-    LongInt u = a % b;
-    LongInt i = a.pow(n);
+    LongInt result_gcd_bin = LongInt::gcd_bin(a, b);
+    LongInt result_gcd_euclidian = a.LongInt::gcd_euclidian(b);
+    LongInt result_lcm = LongInt::lcm(a, b);
+    LongInt Add_Mod = LongInt::Add_Mod(a, b, m);
+    LongInt Sub_Mod = LongInt::Sub_Mod(a, b, m);
+    LongInt Mult_Mod = LongInt::Mult_Mod(a, b, m);
+    LongInt Square_Mod = LongInt::Square_Mod(a, m);
+    LongInt ModPower_Barrett = LongInt::ModPower_Barrett(a, b, m);
 
 
 
-    //Вивід результатів
-    std::cout << "A + B = " << LongInt::convert_NumberToHexString(q.getNumber()) << std::endl;
-    std::cout << "A - B = " << LongInt::convert_NumberToHexString(w.getNumber()) << std::endl;
-    std::cout << "A * 0x10 = " << LongInt::convert_NumberToHexString(e.getNumber()) << std::endl;
-    std::cout << "A * B = " << LongInt::convert_NumberToHexString(r.getNumber()) << std::endl;
-    std::cout << "A ^ 2 = " << LongInt::convert_NumberToHexString(t.getNumber()) << std::endl;
-    std::cout << "A / B = " << LongInt::convert_NumberToHexString(y.getNumber()) << std::endl;
-    std::cout << "A % B = " << LongInt::convert_NumberToHexString(u.getNumber()) << std::endl;
-    std::cout << "A ^ n = " << LongInt::convert_NumberToHexString(i.getNumber()) << std::endl;
-    std::cout << std::endl;
+    std::cout << "gcd_bin(a, b) = " << LongInt::convert_NumberToHexString(result_gcd_bin.getNumber()) << std::endl;
+    std::cout << "gcd_euclidian(a, b) = " << LongInt::convert_NumberToHexString(result_gcd_euclidian.getNumber()) << std::endl;
+    std::cout << "lcm(a, b) = " << LongInt::convert_NumberToHexString(result_lcm.getNumber()) << std::endl;
+    std::cout << "a + b (mod m) = " << LongInt::convert_NumberToHexString(Add_Mod.getNumber()) << std::endl;
+    std::cout << "a - b (mod m) = " << LongInt::convert_NumberToHexString(Sub_Mod.getNumber()) << std::endl;
+    std::cout << "a * b (mod m) = " << LongInt::convert_NumberToHexString(Mult_Mod.getNumber()) << std::endl;
+    std::cout << "a ^ 2 (mod m) = " << LongInt::convert_NumberToHexString(Square_Mod.getNumber()) << std::endl;
+    std::cout << "a ^ b (mod m) = " << LongInt::convert_NumberToHexString(ModPower_Barrett.getNumber()) << std::endl;
 
 
-    std::cout << "Обрахування середнього часу виконання для операцій:" << std::endl;
+    std::cout << "Обрахування середнього часу виконання для операцiй:" << std::endl;
 
     const int iter = 100;
 
-    // Середній час додавання
-    long long totalAddTime = 0;
+
+    long long totalgcd_bintime = 0;
     for (int i = 0; i < iter; ++i) {
         auto startTime = std::chrono::high_resolution_clock::now();
-        LongInt c = a + b;
+        LongInt result_gcd_bin = LongInt::gcd_bin(a, b);
         auto endTime = std::chrono::high_resolution_clock::now();
 
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
-        totalAddTime += duration.count();
+        totalgcd_bintime += duration.count();
     }
-    double averageAddTime = static_cast<double>(totalAddTime) / iter;
-    std::cout << "Серед. час для додавання: " << averageAddTime << " nanoseconds\n";
+    double averagegcdtime = static_cast<double>(totalgcd_bintime) / iter;
+    std::cout << "Серед. час для НСД_bin: " << averagegcdtime << " nanoseconds\n";
 
-    // Середній час віднімання
-    long long totalSubTime = 0;
+
+
+    long long totalgcd_euclidiantime = 0;
     for (int i = 0; i < iter; ++i) {
         auto startTime = std::chrono::high_resolution_clock::now();
-        LongInt d = a - b;
+        LongInt result_gcd_euclidian = a.LongInt::gcd_euclidian(b);
         auto endTime = std::chrono::high_resolution_clock::now();
 
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
-        totalSubTime += duration.count();
+        totalgcd_euclidiantime += duration.count();
     }
-    double averageSubTime = static_cast<double>(totalSubTime) / iter;
-    std::cout << "Серед. час для віднімання: " << averageSubTime << " nanoseconds\n";
+    double averagegcd_euclidiantime = static_cast<double>(totalgcd_euclidiantime) / iter;
+    std::cout << "Серед. час для НСД_euclidian: " << averagegcdtime << " nanoseconds\n";
 
-    // Середній час множення (на цифру)
-    long long totalMultTime = 0;
+
+
+    long long totallcmtime = 0;
     for (int i = 0; i < iter; ++i) {
         auto startTime = std::chrono::high_resolution_clock::now();
-        LongInt e = a * 0x10;
+        LongInt result_lcm = LongInt::lcm(a, b);
         auto endTime = std::chrono::high_resolution_clock::now();
 
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
-        totalMultTime += duration.count();
+        totallcmtime += duration.count();
     }
-    double averageMultTime = static_cast<double>(totalMultTime) / iter;
-    std::cout << "Серед. час мнодення(на цифру): " << averageMultTime << " nanoseconds\n";
+    double averagelcmtime = static_cast<double>(totallcmtime) / iter;
+    std::cout << "Серед. час для НСК: " << averagelcmtime << " nanoseconds\n";
 
-    // Середній час для множення LongInt
-    long long totalLongMultTime = 0;
+
+
+    long long totaladdmodtime = 0;
     for (int i = 0; i < iter; ++i) {
         auto startTime = std::chrono::high_resolution_clock::now();
-        LongInt f = a * b;
+        LongInt Add_Mod = LongInt::Add_Mod(a, b, m);
         auto endTime = std::chrono::high_resolution_clock::now();
 
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
-        totalLongMultTime += duration.count();
+        totaladdmodtime += duration.count();
     }
-    double averageLongMultTime = static_cast<double>(totalLongMultTime) / iter;
-    std::cout << "Серед. час для множення LongInt: " << averageLongMultTime << " nanoseconds\n";
+    double averageaddmodtime = static_cast<double>(totaladdmodtime) / iter;
+    std::cout << "Серед. час для a + b (mod m): " << averageaddmodtime << " nanoseconds\n";
 
-    // Середній час для квадрата 
-    long long totalSquareTime = 0;
+
+
+    long long totalsubmodtime = 0;
     for (int i = 0; i < iter; ++i) {
         auto startTime = std::chrono::high_resolution_clock::now();
-        LongInt g = a.square();
+        LongInt Sub_Mod = LongInt::Sub_Mod(a, b, m);
         auto endTime = std::chrono::high_resolution_clock::now();
 
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
-        totalSquareTime += duration.count();
+        totalsubmodtime += duration.count();
     }
-    double averageSquareTime = static_cast<double>(totalSquareTime) / iter;
-    std::cout << "Серед. час для квадрату: " << averageSquareTime << " nanoseconds\n";
+    double averagesubmodtime = static_cast<double>(totalsubmodtime) / iter;
+    std::cout << "Серед. час для a - b (mod m): " << averagesubmodtime << " nanoseconds\n";
 
-    // Середній час ділення
-    long long totalDivTime = 0;
+
+
+    long long totalmultmodtime = 0;
     for (int i = 0; i < iter; ++i) {
         auto startTime = std::chrono::high_resolution_clock::now();
-        LongInt h = a / b;
+        LongInt Mult_Mod = LongInt::Mult_Mod(a, b, m);
         auto endTime = std::chrono::high_resolution_clock::now();
 
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
-        totalDivTime += duration.count();
+        totalmultmodtime += duration.count();
     }
-    double averageDivTime = static_cast<double>(totalDivTime) / iter;
-    std::cout << "Серед. час для ділення: " << averageDivTime << " nanoseconds\n";
+    double averagemultmodtime = static_cast<double>(totalmultmodtime) / iter;
+    std::cout << "Серед. час для a * b (mod m): " << averagemultmodtime << " nanoseconds\n";
 
-    // Середній час для mod
-    long long totalModTime = 0;
+
+
+    long long totalsquaremodtime = 0;
     for (int i = 0; i < iter; ++i) {
         auto startTime = std::chrono::high_resolution_clock::now();
-        LongInt j = a % b;
+        LongInt Square_Mod = LongInt::Square_Mod(a, m);
         auto endTime = std::chrono::high_resolution_clock::now();
 
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
-        totalModTime += duration.count();
+        totalsquaremodtime += duration.count();
     }
-    double averageModTime = static_cast<double>(totalModTime) / iter;
-    std::cout << "Серед. час для mod: " << averageModTime << " nanoseconds\n";
+    double averagesquaremodtime = static_cast<double>(totalsquaremodtime) / iter;
+    std::cout << "Серед. час для a ^ 2 (mod m): " << averagesquaremodtime << " nanoseconds\n";
 
-    // Середній час виконання pow
-    long long totalPowTime = 0;
+
+
+    long long totalpowmodtime = 0;
     for (int i = 0; i < iter; ++i) {
         auto startTime = std::chrono::high_resolution_clock::now();
-        LongInt k = a.pow(n);
+        LongInt ModPower_Barrett = LongInt::ModPower_Barrett(a, b, m);
         auto endTime = std::chrono::high_resolution_clock::now();
 
-        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime);
-        totalPowTime += duration.count();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+        totalpowmodtime += duration.count();
     }
-    double averagePowTime = static_cast<double>(totalPowTime) / iter;
-    std::cout << "Серед. час для pow: " << averagePowTime << " nanoseconds\n";
+    double averagepowmodtime = static_cast<double>(totalpowmodtime) / 10;
+    std::cout << "Серед. час для a ^ b (mod m): " << averagepowmodtime << " microseconds\n";
 
 
 
-    // Проведення тестів
+    //Тестування
 
-    LongInt hexLongInt("FFFFFF");
-    assert(LongInt::convert_NumberToHexString(hexLongInt.getNumber()) == "FFFFFF");
+    LongInt A("6745A11ED5C715477C4AA37A865D25E494295C4AA5453581A1A3B2D0BDEBED8910746C403A2A624E");
+    LongInt B("715D237C256351605D77ED70736FC7A6ED4DE2D5");
+    LongInt C("B897ED959502EF58818C869EA3923C2810AEE22492BA1DC935085DBBE9667F8C036DEEC0CD800C69");
+    LongInt M("F8F6E9F15BE202327967EC80D54C2D207C582D6055639B7B1F89DC126E6A1D91FED1D500D2E1BC76");
 
-    LongInt A("DA107D303F078BC54C6ADBB8EC0BE59F65D709F76281CA5DADDD1C4C64A15AAF867556E7C0A34415");
-    LongInt B("9AC19414A633B2ABD6646EB0BC09C32C02DB7452");
-    LongInt C("14CDEAC83901D4C92B6E720D27D7EE96C83A233C3E7CAB76D63677C2F578618596D6DECE8D5DA710");
+    /*LongInt result_gcd_bin = LongInt::gcd_bin(A, B);;
+    assert(LongInt::convert_NumberToHexString(result_gcd_bin.getNumber()) == "3");
 
-    LongInt addResult = A + B;
-    assert(LongInt::convert_NumberToHexString(addResult.getNumber()) == "DA107D303F078BC54C6ADBB8EC0BE59F65D709F7FD435E725410CEF83B05C960427F1A13C37EB867");
+    LongInt result_lcm = LongInt::lcm(A, B);
+    assert(LongInt::convert_NumberToHexString(result_lcm.getNumber()) == "F3E6F9394CCF9A3E8437DF2D72B793B2B525698840369143CDF2AC44114F76AF9ED8B48CAADE7DF053C14F26ECF22DE1AF652C69B1B4B0A87D637A2");
 
-    LongInt subResult = A - B;
-    assert(LongInt::convert_NumberToHexString(subResult.getNumber()) == "DA107D303F078BC54C6ADBB8EC0BE59F65D709F6C7C0364907A969A08E3CEBFECA6B93BBBDC7CFC3");
+    LongInt Add_Mod = LongInt::Add_Mod(A, B, M);
+    assert(LongInt::convert_NumberToHexString(Add_Mod.getNumber()) == "6745A11ED5C715477C4AA37A865D25E494295C4B16A258FDC70704311B63DAF983E433E727784523");
 
-    LongInt multResult = A * B;
-    assert(LongInt::convert_NumberToHexString(multResult.getNumber()) == "83D2CFE0868675A26945D3E5A1B4668154F972A1B2BF2866B50771A1FBD8557D02CFD93E3E5C6228AC9C1734E4A95929C6AA7DF3AE629E55171C52BA");
+    LongInt Sub_Mod = LongInt::Sub_Mod(A, B, M);
+    assert(LongInt::convert_NumberToHexString(Sub_Mod.getNumber()) == "6745A11ED5C715477C4AA37A865D25E494295C4A33E812057C406170607400189D04A4994CDC7F79");
 
-    LongInt divResult = A / B;
-    assert(LongInt::convert_NumberToHexString(divResult.getNumber()) == "168B9B7B7514F319DF4E7F288D79F793DB4FF1CEC");
+    LongInt Mult_Mod = LongInt::Mult_Mod(A, B, M);
+    assert(LongInt::convert_NumberToHexString(Mult_Mod.getNumber()) == "943DA66CF631772B28B347EBA82A867965304352F82580121015CD21F647EC8E44BAF61309364966");
 
-    LongInt modResult = A % B;
-    assert(LongInt::convert_NumberToHexString(modResult.getNumber()) == "6611C23F7E8877568CD51CD83C0FFA1897ED107D");
+    LongInt Square_Mod = LongInt::Square_Mod(A, M);
+    assert(LongInt::convert_NumberToHexString(Square_Mod.getNumber()) == "8707C2B27B2E55F061158C5437B7A74135D0039F9EDDB435B875D363B061EA030369D309A5F47E0");
+
+    LongInt ModPower_Barrett = LongInt::ModPower_Barrett(A, B, M);
+    assert(LongInt::convert_NumberToHexString(ModPower_Barrett.getNumber()) == "BFE618791866A0EC1ECCB89FD2F15518118DCE3DA3D5A83BDDB61C3CC5ED26CE348E3D79A11F5CEA");*/
 
 
-    LongInt res1 = (A + B) * C;
-    LongInt res2 = C * (A + B);
-    LongInt res3 = A * C + B * C;
+
+    //#1
+
+    //(a + b) * c
+    LongInt res1 = LongInt::BarrettReduction((A + B) * C, M, LongInt::funcMu(M));
+
+    ////a * c + b * c 
+    LongInt res2 = LongInt::BarrettReduction(A * C + B * C, M, LongInt::funcMu(M));
+
+    ////c * (a + b) 
+    LongInt res3 = LongInt::BarrettReduction(C * (A + B), M, LongInt::funcMu(M));
+
     assert(res1 == res2 && res2 == res3);
 
 
-    int m = 105;
+    //#2
+    /*int t = 100;
+    LongInt j = a * t;
 
-    LongInt res4 = A * m;
-    LongInt res5("0");
-    for (int i = 0; i < m; i++) {
-        res5 = res5 + A;
+    LongInt res5 = LongInt::BarrettReduction(j, M, LongInt::funcMu(M));
+
+    LongInt k;
+    for (int i = 0; i < t; ++i) {
+        k = k + a;
     }
-    assert(res4 == res5);
-
+    LongInt res6 = LongInt::BarrettReduction(k, M, LongInt::funcMu(M));
+    assert(res5 == res6 );*/
 
     std::cout << std::endl;
     std::cout << "Тести успiшно завершенi" << std::endl;
 
     return 0;
 }
-
-
